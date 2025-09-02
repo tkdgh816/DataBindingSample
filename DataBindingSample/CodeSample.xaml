@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="DataBindingSample.CodeSample"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:DataBindingSample"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+
+  <UserControl.Resources>
+    <local:ObjectNotNullConverter x:Key="ObjectNotNullConverter" />
+    <Style x:Key="View_ScrollViewer_Style"
+           TargetType="ScrollViewer">
+      <Setter Property="HorizontalScrollMode"
+              Value="Disabled" />
+      <Setter Property="HorizontalScrollBarVisibility"
+              Value="Disabled" />
+      <Setter Property="VerticalScrollMode"
+              Value="Disabled" />
+      <Setter Property="VerticalScrollBarVisibility"
+              Value="Disabled" />
+      <Setter Property="Padding"
+              Value="12,0,12,8" />
+    </Style>
+  </UserControl.Resources>
+  <StackPanel Background="{StaticResource SolidBackgroundFillColorBase}"
+              BorderBrush="{StaticResource ControlStrokeColorDefault}"
+              BorderThickness="1"
+              CornerRadius="{StaticResource ControlCornerRadius}">
+    <SelectorBar x:Name="View_SelectorBar"
+                 SelectionChanged="View_SelectorBar_SelectionChanged">
+      <SelectorBarItem x:Name="View_XamlCode_SelectorBarItem"
+                       Text="XAML"
+                       IsEnabled="{x:Bind XamlCode, Converter={StaticResource ObjectNotNullConverter}}" />
+      <SelectorBarItem x:Name="View_CSharpCode_SelectorBarItem"
+                       Text="C#"
+                       IsEnabled="{x:Bind CSharpCode, Converter={StaticResource ObjectNotNullConverter}}" />
+    </SelectorBar>
+    <ScrollViewer Style="{StaticResource View_ScrollViewer_Style}">
+      <TextBlock x:Name="View_TextBlock"
+                 TextWrapping="Wrap"
+                 FontFamily="Cascadia Mono"
+                 FontWeight="SemiLight"
+                 FontSize="13"
+                 IsTextSelectionEnabled="True"
+                 LineHeight="20"
+                 Padding="0,4"
+                 MinHeight="20" />
+    </ScrollViewer>
+  </StackPanel>
+</UserControl>

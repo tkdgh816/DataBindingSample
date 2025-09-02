@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page x:Class="DataBindingSample.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:DataBindingSample"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+  <NavigationView x:Name="View_NavigationView"
+                  PaneDisplayMode="Top"
+                  IsBackButtonVisible="Collapsed"
+                  IsSettingsVisible="False"
+                  SelectionChanged="View_NavigationView_SelectionChanged"
+                  Loaded="View_NavigationView_Loaded">
+    <NavigationView.MenuItems>
+      <NavigationViewItem x:Name="View_Binding_NavigationViewItem"
+                          Content="Binding" />
+      <NavigationViewItem x:Name="View_xBind_NavigationViewItem"
+                          Content="x:Bind" />
+    </NavigationView.MenuItems>
+
+    <NavigationView.Content>
+      <ScrollViewer>
+        <Frame x:Name="View_Frame"
+               Padding="12" />
+      </ScrollViewer>
+    </NavigationView.Content>
+  </NavigationView>
+</Page>
