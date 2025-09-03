@@ -77,12 +77,13 @@ public sealed partial class xBindPage : Page
   }
 
   private Visibility ToVisibility(bool boolValue) => boolValue ? Visibility.Visible : Visibility.Collapsed;
-  private bool NegateBool(bool boolValue) => !boolValue;
-  private SolidColorBrush ToBrush(Color color) => new SolidColorBrush(color);
 
+  private bool NegateBool(bool boolValue) => !boolValue;
   private void BindBackToggle(bool boolValue) => View_S10_FirstToggleSwitch.IsOn = !boolValue;
 
-  private string Format(string format, string s1, string s2) => String.Format(format, s1, s2);
+  private SolidColorBrush ToBrush(Color color) => new SolidColorBrush(color);
+
+  private string Format(string format, string s1, string s2) => string.Format(format, s1, s2);
 
   public static string GetGender(Animal animal) => animal.Gender ? "Male" : "Female";
 }
@@ -883,9 +884,289 @@ public sealed partial class xBindPage : Page
             </ControlTemplate>
           </ToggleButton.Template>
         </ToggleButton>
-
       """;
     View_S9_1stCodeSample.XamlHighlights = "x:Bind";
+    #endregion
+
+    #region Section 10
+    View_S10_1stCodeSample.XamlCode = """
+      <TextBlock Text="Visible"
+                 Visibility="{x:Bind ToVisibility(View_S10_FirstToggleSwitch.IsOn), Mode=OneWay}" />
+      """;
+    View_S10_1stCodeSample.XamlHighlights = "x:Bind";
+    View_S10_1stCodeSample.CSharpCode = """
+      // xBindPage.xaml.cs
+      public sealed partial class xBindPage : Page
+      {
+        private Visibility ToVisibility(bool boolValue) => boolValue ? Visibility.Visible : Visibility.Collapsed;
+      }
+      """;
+
+    View_S10_2ndCodeSample.XamlCode = """
+      <TextBlock Text="Visible"
+                 Visibility="{x:Bind ViewModel.ToVisibilityInstance(View_S10_FirstToggleSwitch.IsOn), Mode=OneWay}" />
+      """;
+    View_S10_2ndCodeSample.XamlHighlights = "x:Bind";
+    View_S10_2ndCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        public Visibility ToVisibilityInstance(bool boolValue) => boolValue ? Visibility.Visible : Visibility.Collapsed;
+      }
+      """;
+
+    View_S10_3rdCodeSample.XamlCode = """
+      <TextBlock Text="Visible"
+                 Visibility="{x:Bind local:MainViewModel.ToVisibilityStatic(View_S10_FirstToggleSwitch.IsOn), Mode=OneWay}" />
+      """;
+    View_S10_3rdCodeSample.XamlHighlights = "x:Bind";
+    View_S10_3rdCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        public static Visibility ToVisibilityStatic(bool boolValue) => boolValue ? Visibility.Visible : Visibility.Collapsed;
+      }
+      """;
+
+    View_S10_4thCodeSample.XamlCode = """
+      <ToggleSwitch x:Name="View_S10_SecondToggleSwitch"
+                    IsOn="{x:Bind NegateBool(View_S10_FirstToggleSwitch.IsOn), Mode=TwoWay, BindBack=NegateBool}" />
+      """;
+    View_S10_4thCodeSample.XamlHighlights = "x:Bind";
+    View_S10_4thCodeSample.CSharpCode = """
+      // xBindPage.xaml.cs
+      public sealed partial class xBindPage : Page
+      {
+        private bool NegateBool(bool boolValue) => !boolValue;
+      }
+      """;
+
+    View_S10_5thCodeSample.XamlCode = """
+      <ToggleSwitch x:Name="View_S10_ThirdToggleSwitch"
+                    IsOn="{x:Bind NegateBool(View_S10_FirstToggleSwitch.IsOn), Mode=TwoWay, BindBack=BindBackToggle}" />
+      """;
+    View_S10_5thCodeSample.XamlHighlights = "x:Bind";
+    View_S10_5thCodeSample.CSharpCode = """
+      // xBindPage.xaml.cs
+      public sealed partial class xBindPage : Page
+      {
+        private bool NegateBool(bool boolValue) => !boolValue;
+        private void BindBackToggle(bool boolValue) => View_S10_FirstToggleSwitch.IsOn = !boolValue;
+      }
+      """;
+
+    View_S10_6thCodeSample.XamlCode = """
+      <Rectangle Stretch="Fill"
+                 Height="50"
+                 RadiusX="24"
+                 RadiusY="24"
+                 Fill="{x:Bind ToBrush(View_S10_ColorPicker.Color), Mode=OneWay}" />
+      <ColorPicker x:Name="View_S10_ColorPicker"
+                   Color="LightGoldenrodYellow"
+                   ColorSpectrumShape="Ring"
+                   IsMoreButtonVisible="True"
+                   IsColorPreviewVisible="False"
+                   HorizontalAlignment="Center" />
+      """;
+    View_S10_6thCodeSample.XamlHighlights = "x:Bind";
+    View_S10_6thCodeSample.CSharpCode = """
+      // xBindPage.xaml.cs
+      public sealed partial class xBindPage : Page
+      {
+        private SolidColorBrush ToBrush(Color color) => new SolidColorBrush(color);
+      }
+      """;
+
+    View_S10_7thCodeSample.XamlCode = """
+      <TextBox Text="{x:Bind ViewModel.Main_S10_Text1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               PlaceholderText="Enter first text." />
+      <TextBox Text="{x:Bind ViewModel.Main_S10_Text2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               PlaceholderText="Enter second text." />
+      <TextBlock Text="{x:Bind Format('{0} and {1}', ViewModel.Main_S10_Text1, ViewModel.Main_S10_Text2), Mode=OneWay}" />
+      """;
+    View_S10_7thCodeSample.XamlHighlights = "x:Bind";
+    View_S10_7thCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        private string _main_S10_Text1 = "";
+        public string Main_S10_Text1
+        {
+          get => _main_S10_Text1;
+          set => SetProperty(ref _main_S10_Text1, value);
+        }
+
+        private string _main_S10_Text2 = "";
+        public string Main_S10_Text2
+        {
+          get => _main_S10_Text2;
+          set => SetProperty(ref _main_S10_Text2, value);
+        }
+      }
+
+      // xBindPage.xaml.cs
+      public sealed partial class xBindPage : Page
+      {
+        private string Format(string format, string s1, string s2) => string.Format(format, s1, s2);
+      }
+      """;
+
+    View_S10_8thCodeSample.XamlCode = """
+      <CalendarDatePicker Date="{x:Bind ViewModel.Main_S10_DateTimeOffset, Mode=TwoWay}" />
+      <TextBlock Text="100 Days Later"
+                 VerticalAlignment="Center" />
+      <CalendarDatePicker Date="{x:Bind ViewModel.Main_S10_DateTimeOffset.AddDays(100), Mode=OneWay}"
+                          IsEnabled="False" />
+      """;
+    View_S10_8thCodeSample.XamlHighlights = "x:Bind";
+    View_S10_8thCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        private DateTimeOffset _main_S10_DateTimeOffset = DateTimeOffset.Now;
+        public DateTimeOffset Main_S10_DateTimeOffset
+        {
+          get => _main_S10_DateTimeOffset;
+          set => SetProperty(ref _main_S10_DateTimeOffset, value);
+        }
+      }
+      """;
+
+    View_S10_9thCodeSample.XamlCode = """
+      <Rectangle Stretch="Fill"
+                 Height="50"
+                 RadiusX="24"
+                 RadiusY="24"
+                 Fill="{x:Bind ViewModel.Main_S10_Brush, Mode=OneWay}" />
+      <ColorPicker Color="LightGoldenrodYellow"
+                   ColorSpectrumShape="Ring"
+                   IsMoreButtonVisible="True"
+                   IsColorPreviewVisible="False"
+                   HorizontalAlignment="Center"
+                   ColorChanged="{x:Bind ViewModel.ColorPicker_ColorChanged}" />
+      """;
+    View_S10_9thCodeSample.XamlHighlights = "x:Bind";
+    View_S10_9thCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        private SolidColorBrush? _main_S10_Brush;
+        public SolidColorBrush? Main_S10_Brush
+        {
+          get => _main_S10_Brush;
+          set => SetProperty(ref _main_S10_Brush, value);
+        }
+
+        public void ColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+        {
+          Main_S10_Brush = new SolidColorBrush(args.NewColor);
+        }
+      }
+
+      // xBindPage.xaml.cs
+      public sealed partial class xBindPage : Page
+      {
+        public static string GetGender(Animal animal) => animal.Gender ? "Male" : "Female";
+      }
+      """;
+    #endregion
+
+    #region Section 11
+    View_S11_1stCodeSample.XamlCode = """<TextBlock Text="{x:Bind ViewModel.Main_S11_Animal.Name}" />""";
+    View_S11_1stCodeSample.XamlHighlights = "x:Bind";
+    View_S11_1stCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        public Animal Main_S11_Animal { get; } = new Cat("Cat", true, "A-1100");
+      }
+      """;
+
+    View_S11_2ndCodeSample.XamlCode = """<TextBlock Text="{x:Bind ViewModel.Main_S11_Animal.(local:Cat.Id)}" />""";
+    View_S11_2ndCodeSample.XamlHighlights = "x:Bind";
+    View_S11_2ndCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        public Animal Main_S11_Animal { get; } = new Cat("Cat", true, "A-1100");
+      }
+      """;
+
+    View_S11_3rdCodeSample.XamlCode = """<TextBlock Text="{x:Bind ViewModel.Main_S11_Animals[2].(local:Dog.Id)}" />""";
+    View_S11_3rdCodeSample.XamlHighlights = "x:Bind";
+    View_S11_3rdCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        public List<Animal> Main_S11_Animals { get; } = new()
+        {
+          new Dog("Dog 1", false, 1001) { Description = "Dog 1 description" },
+          new Dog("Dog 2", true, 1002) { Description = "Dog 2 description" },
+          new Dog("Dog 3", true, 1003)
+        };
+      }
+      """;
+
+    View_S11_4thCodeSample.XamlCode = """
+      <ListView x:Name="View_S11_ListView"
+                ItemsSource="{x:Bind ViewModel.Main_S11_Animals}"
+                BorderBrush="{StaticResource SurfaceStrokeColorDefault}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource ControlCornerRadius}">
+        <ListView.Header>
+          <StackPanel Orientation="Horizontal"
+                      Spacing="8"
+                      Padding="16,8"
+                      BorderBrush="{StaticResource SurfaceStrokeColorDefault}"
+                      BorderThickness="0,0,0,1">
+            <TextBlock Text="Type"
+                       Width="80"
+                       Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <TextBlock Text="Name"
+                       Width="100"
+                       Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <TextBlock Text="Gender"
+                       Width="100"
+                       Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <TextBlock Text="Id"
+                       Width="100"
+                       Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <TextBlock Text="Description"
+                       Style="{StaticResource BodyStrongTextBlockStyle}" />
+          </StackPanel>
+        </ListView.Header>
+
+        <ListView.ItemTemplate>
+          <DataTemplate x:DataType="local:Animal">
+            <StackPanel Orientation="Horizontal"
+                        Spacing="8">
+              <TextBlock Text="{x:Bind}"
+                         Width="80" />
+              <TextBlock Text="{x:Bind Name}"
+                         Width="100" />
+              <TextBlock Text="{x:Bind local:xBindPage.GetGender((local:Animal))}"
+                         Width="100" />
+              <TextBlock Text="{x:Bind (local:Animal).(local:Dog.Id)}"
+                         Width="100" />
+              <TextBlock Text="{x:Bind Description, Mode=OneWay, TargetNullValue='No description'}" />
+            </StackPanel>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+      """;
+    View_S11_4thCodeSample.XamlHighlights = "x:Bind";
+    View_S11_4thCodeSample.CSharpCode = """
+      // MainViewModel.cs
+      public class MainViewModel : ObservableObject
+      {
+        public List<Animal> Main_S11_Animals { get; } = new()
+        {
+          new Dog("Dog 1", false, 1001) { Description = "Dog 1 description" },
+          new Dog("Dog 2", true, 1002) { Description = "Dog 2 description" },
+          new Dog("Dog 3", true, 1003)
+        };
+      }
+      """;
     #endregion
   }
 }

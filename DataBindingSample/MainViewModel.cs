@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 
 namespace DataBindingSample;
 
@@ -105,6 +105,10 @@ public class MainViewModel : ObservableObject
     new Cat("Cat 3", true, "A-803") { Description = "Cat 3 description" },
   };
 
+  public Visibility ToVisibilityInstance(bool boolValue) => boolValue ? Visibility.Visible : Visibility.Collapsed;
+
+  public static Visibility ToVisibilityStatic(bool boolValue) => boolValue ? Visibility.Visible : Visibility.Collapsed;
+
   private string _main_S10_Text1 = "";
   public string Main_S10_Text1
   {
@@ -126,20 +130,24 @@ public class MainViewModel : ObservableObject
     set => SetProperty(ref _main_S10_DateTimeOffset, value);
   }
 
-  public void ColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+  private SolidColorBrush? _main_S10_Brush;
+  public SolidColorBrush? Main_S10_Brush
   {
-    Debug.WriteLine(sender is null);
-    Debug.WriteLine(args.NewColor);
+    get => _main_S10_Brush;
+    set => SetProperty(ref _main_S10_Brush, value);
   }
 
-  public List<Animal> Main_S10_Animals { get; } = new()
+  public void ColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+  {
+    Main_S10_Brush = new SolidColorBrush(args.NewColor);
+  }
+
+  public Animal Main_S11_Animal { get; } = new Cat("Cat", true, "A-1100");
+
+  public List<Animal> Main_S11_Animals { get; } = new()
   {
     new Dog("Dog 1", false, 1001) { Description = "Dog 1 description" },
     new Dog("Dog 2", true, 1002) { Description = "Dog 2 description" },
     new Dog("Dog 3", true, 1003)
   };
-
-  public Visibility ToVisibilityInstance(bool boolValue) => boolValue ? Visibility.Visible : Visibility.Collapsed;
-
-  public static Visibility ToVisibilityStatic(bool boolValue) => boolValue ? Visibility.Visible : Visibility.Collapsed;
 }
