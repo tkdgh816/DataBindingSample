@@ -86,6 +86,31 @@ public sealed partial class xBindPage : Page
   private string Format(string format, string s1, string s2) => string.Format(format, s1, s2);
 
   public static string GetGender(Animal animal) => animal.Gender ? "Male" : "Female";
+
+  private int _bindingUpdateCount = 1;
+  private void View_S12_UpdateButton_Click(object sender, RoutedEventArgs e)
+  {
+    this.Bindings.Update();
+    if (_bindingUpdateCount > 0)
+      View_S12_InfoBar.Title = $"Binding is working and has been updated ({_bindingUpdateCount++}).";
+    else
+    {
+      _bindingUpdateCount++;
+      View_S12_StopTrackingButton.IsEnabled = true;
+      View_S12_InfoBar.Severity = InfoBarSeverity.Success;
+      View_S12_InfoBar.Title = "Binding is working and has been updated.";
+    }
+  }
+
+  private void View_S12_StopTrackingButton_Click(object sender, RoutedEventArgs e)
+  {
+    this.Bindings.StopTracking();
+
+    _bindingUpdateCount = 0;
+    View_S12_StopTrackingButton.IsEnabled = false;
+    View_S12_InfoBar.Severity = InfoBarSeverity.Error;
+    View_S12_InfoBar.Title = "Binding has been disconnected.";
+  }
 }
 
 public class AnimalListViewItemTemplateSelector : DataTemplateSelector
@@ -1167,6 +1192,71 @@ public sealed partial class xBindPage : Page
         };
       }
       """;
+    #endregion
+
+    #region Section 12
+    View_S12_1stCodeSample.XamlCode = """
+      <StackPanel Orientation="Horizontal"
+                  Spacing="12">
+        <Button x:Name="View_S12_UpdateButton"
+                Content="Update"
+                Style="{StaticResource AccentButtonStyle}"
+                Click="View_S12_UpdateButton_Click" />
+        <Button x:Name="View_S12_StopTrackingButton"
+                Content="StopTracking"
+                Style="{StaticResource AccentButtonStyle}"
+                Click="View_S12_StopTrackingButton_Click" />
+      </StackPanel>
+
+      <InfoBar x:Name="View_S12_InfoBar"
+               Title="Binding is working."
+               Severity="Success"
+               IsOpen="True"
+               IsClosable="False" />
+      """;
+    View_S12_1stCodeSample.XamlHighlights = "Click";
+    View_S12_1stCodeSample.CSharpCode = """
+      // xBindPage.xaml.cs
+      public sealed partial class xBindPage : Page
+      {
+        private int _bindingUpdateCount = 1;
+        private void View_S12_UpdateButton_Click(object sender, RoutedEventArgs e)
+        {
+          this.Bindings.Update();
+          if (_bindingUpdateCount > 0)
+            View_S12_InfoBar.Title = $"Binding is working and has been updated ({_bindingUpdateCount++}).";
+          else
+          {
+            _bindingUpdateCount++;
+            View_S12_StopTrackingButton.IsEnabled = true;
+            View_S12_InfoBar.Severity = InfoBarSeverity.Success;
+            View_S12_InfoBar.Title = "Binding is working and has been updated.";
+          }
+        }
+
+        private void View_S12_StopTrackingButton_Click(object sender, RoutedEventArgs e)
+        {
+          this.Bindings.StopTracking();
+
+          _bindingUpdateCount = 0;
+          View_S12_StopTrackingButton.IsEnabled = false;
+          View_S12_InfoBar.Severity = InfoBarSeverity.Error;
+          View_S12_InfoBar.Title = "Binding has been disconnected.";
+        }
+      }
+      """;
+
+    View_S12_2ndCodeSample.XamlCode = """
+      <TextBox x:Name="View_S12_InputTextBox"
+               PlaceholderText="Enter text." />
+      <TextBox Text="{x:Bind View_S12_InputTextBox.Text, Mode=OneTime}"
+               PlaceholderText="OneTime Binding."
+               IsReadOnly="True" />
+      <TextBox Text="{x:Bind View_S12_InputTextBox.Text, Mode=OneWay}"
+               PlaceholderText="OneWay Binding."
+               IsReadOnly="True" />
+      """;
+    View_S12_2ndCodeSample.XamlHighlights = "x:Bind";
     #endregion
   }
 }
