@@ -82,5 +82,6 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <ApplicationIcon>Assets\Icon\AppIcon_128.ico</ApplicationIcon>
     <PackageIcon>AppIcon_128.png</PackageIcon>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 </Project>
